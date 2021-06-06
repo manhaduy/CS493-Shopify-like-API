@@ -19,10 +19,10 @@
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `customers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users` (
+CREATE TABLE `customers` (
   `id` mediumint(9) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -37,9 +37,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-LOCK TABLES `users` WRITE;
+LOCK TABLES `customers` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES
+INSERT INTO `customers` VALUES
   (0,'Admin','admin@businesses.com','$2a$08$Y00/JO/uN9n0dHKuudRX2eKksWMIHXDLzHWKuz/K67alAYsZRRike',1),
   (1,'Nick Arzner','nick@block15.com','$2a$08$Y2IHnr/PU9tzG5HKrHGJH.zH3HAvlR5i5puD5GZ1sHA/mVrHKci72',0),
   (2,'Tori Lockwood','tori@robnetts.com','$2a$08$bAKRXPs6fUPhqjZy55TIeO1e.aXud4LD81awrYncaCKJoMsg/s0c.',0),
@@ -58,7 +58,7 @@ INSERT INTO `users` VALUES
   (15,'Alex Spaeth','alex@spaethlumber.com','$2a$08$H9dDFONytVUgh2ZcCQlHL.8uP6RricbtoCk2vsr/roTBtGkYLUivS',0),
   (16,'Tristan James','tristan@newmorningbakery.com','$2a$08$pJFEMJNiTa7azhokPUnXZusS6NMqT3eBJE45sX6Kli380PZoM2nje',0)
   ;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -83,7 +83,7 @@ CREATE TABLE `businesses` (
   `ownerid` mediumint(9) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_ownerid` (`ownerid`),
-  CONSTRAINT `businesses_ibfk_1` FOREIGN KEY (`ownerid`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  CONSTRAINT `businesses_ibfk_1` FOREIGN KEY (`ownerid`) REFERENCES `customers` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -126,12 +126,12 @@ DROP TABLE IF EXISTS `photos`;
 CREATE TABLE `photos` (
   `id` mediumint(9) NOT NULL AUTO_INCREMENT,
   `caption` text,
-  `userid` mediumint(9) NOT NULL,
+  `customerid` mediumint(9) NOT NULL,
   `businessid` mediumint(9) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_userid` (`userid`),
+  KEY `idx_customerid` (`customerid`),
   KEY `idx_businessid` (`businessid`),
-  CONSTRAINT `photos_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `photos_ibfk_1` FOREIGN KEY (`customerid`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `photos_ibfk_2` FOREIGN KEY (`businessid`) REFERENCES `businesses` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -168,12 +168,12 @@ CREATE TABLE `reviews` (
   `dollars` tinyint(4) NOT NULL,
   `stars` float NOT NULL,
   `review` text,
-  `userid` mediumint(9) NOT NULL,
+  `customerid` mediumint(9) NOT NULL,
   `businessid` mediumint(9) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_userid` (`userid`),
+  KEY `idx_customerid` (`customerid`),
   KEY `idx_businessid` (`businessid`),
-  CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`customerid`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`businessid`) REFERENCES `businesses` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
