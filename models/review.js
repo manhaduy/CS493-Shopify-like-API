@@ -9,7 +9,7 @@ const { extractValidFields } = require('../lib/validation');
  * Schema describing required/optional fields of a review object.
  */
 const ReviewSchema = {
-  userid: { required: true },
+  customerid: { required: true },
   businessid: { required: true },
   dollars: { required: true },
   stars: { required: true },
@@ -24,14 +24,14 @@ exports.ReviewSchema = ReviewSchema;
  * specified user has already reviewed the specified business or false
  * otherwise.
  */
-async function hasUserReviewedBusiness(userid, businessid) {
+async function hasCustomerReviewedBusiness(customerid, businessid) {
   const [ results ] = await mysqlPool.query(
-    'SELECT COUNT(*) AS count FROM reviews WHERE userid = ? AND businessid = ?',
-    [ userid, businessid ]
+    'SELECT COUNT(*) AS count FROM reviews WHERE customerid = ? AND businessid = ?',
+    [ customerid, businessid ]
   );
   return results[0].count > 0;
 }
-exports.hasUserReviewedBusiness = hasUserReviewedBusiness;
+exports.hasCustomerReviewedBusiness = hasCustomerReviewedBusiness;
 
 /*
  * Executes a MySQL query to insert a new review into the database.  Returns
@@ -114,11 +114,11 @@ exports.getReviewsByBusinessId = getReviewsByBusinessId;
  * does not have any reviews.  This function does not verify that the specified
  * user ID corresponds to a valid user.
  */
-async function getReviewsByUserId(id) {
+async function getReviewsByCustomerId(id) {
   const [ results ] = await mysqlPool.query(
-    'SELECT * FROM reviews WHERE userid = ?',
+    'SELECT * FROM reviews WHERE customerid = ?',
     [ id ]
   );
   return results;
 }
-exports.getReviewsByUserId = getReviewsByUserId;
+exports.getReviewsByCustomerId = getReviewsByCustomerId;

@@ -16,7 +16,7 @@ const {
 } = require('../models/business');
 
 const {requireAuthentication} = require('../lib/auth');
-const {validateUserIdEmail} = require('../models/user');
+const {validateCustomerIdEmail} = require('../models/customer');
 /*
  * Route to return a paginated list of businesses.
  */
@@ -52,7 +52,7 @@ router.post('/', requireAuthentication, async (req, res) => {
   if (validateAgainstSchema(req.body, BusinessSchema)) {
       //Try to validate
       try {
-        const authorizedSearch = await validateUserIdEmail(req.user, parseInt(req.params.id) );
+        const authorizedSearch = await validateCustomerIdEmail(req.customer, parseInt(req.params.id) );
         if(!authorizedSearch){
           res.status(403).send({
             error: "Unauthorized to access the specific resource"
@@ -78,7 +78,7 @@ router.post('/', requireAuthentication, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Unable to validate user id.  Please try again later."
+      error: "Unable to validate customer id.  Please try again later."
     });
   }
 
@@ -122,7 +122,7 @@ router.put('/:id', requireAuthentication, async (req, res, next) => {
       if (business) {
 
     try {
-      const authorizedSearch = await validateUserIdEmail(req.user, parseInt(req.params.id) );
+      const authorizedSearch = await validateCustomerIdEmail(req.customer, parseInt(req.params.id) );
       if(!authorizedSearch){
         res.status(403).send({
           error: "Unauthorized to access the specific resource"
@@ -153,7 +153,7 @@ router.put('/:id', requireAuthentication, async (req, res, next) => {
 } catch (err) {
   console.error(err);
   res.status(500).send({
-    error: "Unable to validate user id.  Please try again later."
+    error: "Unable to validate customer id.  Please try again later."
   });
 }
 
@@ -187,7 +187,7 @@ router.delete('/:id', requireAuthentication, async (req, res, next) => {
     if (business) {
 
   try {
-    const authorizedSearch = await validateUserIdEmail(req.user, parseInt(req.params.id) );
+    const authorizedSearch = await validateCustomerIdEmail(req.customer, parseInt(req.params.id) );
     if(!authorizedSearch){
       res.status(403).send({
         error: "Unauthorized to access the specific resource"
@@ -213,7 +213,7 @@ router.delete('/:id', requireAuthentication, async (req, res, next) => {
 } catch (err) {
   console.error(err);
   res.status(500).send({
-    error: "Unable to validate user id.  Please try again later."
+    error: "Unable to validate customer id.  Please try again later."
   });
 }
 

@@ -14,7 +14,7 @@ const {
 } = require('../models/photo');
 
 const {requireAuthentication} = require('../lib/auth');
-const {validateUserIdEmail} = require('../models/user');
+const {validateCustomerIdEmail} = require('../models/customer');
 /*
  * Route to create a new photo.
  */
@@ -22,7 +22,7 @@ router.post('/', requireAuthentication, async (req, res) => {
   if (validateAgainstSchema(req.body, PhotoSchema)) {
     //Try to validate
     try {
-      const authorizedSearch = await validateUserIdEmail(req.user, parseInt(req.params.id) );
+      const authorizedSearch = await validateCustomerIdEmail(req.customer, parseInt(req.params.id) );
       if(!authorizedSearch){
         res.status(403).send({
           error: "Unauthorized to access the specific resource"
@@ -48,7 +48,7 @@ router.post('/', requireAuthentication, async (req, res) => {
 } catch (err) {
   console.error(err);
   res.status(500).send({
-    error: "Unable to validate user id.  Please try again later."
+    error: "Unable to validate customer id.  Please try again later."
   });
 }
 
@@ -95,7 +95,7 @@ router.put('/:id', requireAuthentication, async (req, res, next) => {
          if (existingPhoto) {
            try{
                  //Try to validate user email
-               const authorizedSearch = await validateUserIdEmail(req.user, parseInt(req.params.id) );
+               const authorizedSearch = await validateCustomerIdEmail(req.customer, parseInt(req.params.id) );
                if(!authorizedSearch){
                  res.status(403).send({
                    error: "Unauthorized to access the specific resource"
@@ -103,7 +103,7 @@ router.put('/:id', requireAuthentication, async (req, res, next) => {
                } else {
 
 
-        if (req.body.businessid === existingPhoto.businessid && req.body.userid === existingPhoto.userid) {
+        if (req.body.businessid === existingPhoto.businessid && req.body.customerid === existingPhoto.customerid) {
           const updateSuccessful = await replacePhotoById(id, req.body);
           if (updateSuccessful) {
             res.status(200).send({
@@ -117,7 +117,7 @@ router.put('/:id', requireAuthentication, async (req, res, next) => {
           }
         } else {
           res.status(403).send({
-            error: "Updated photo must have the same businessID and userID"
+            error: "Updated photo must have the same businessID and customerID"
           });
         }
 }
@@ -126,7 +126,7 @@ router.put('/:id', requireAuthentication, async (req, res, next) => {
 } catch (err) {
   console.error(err);
   res.status(500).send({
-    error: "Unable to validate user id.  Please try again later."
+    error: "Unable to validate customer id.  Please try again later."
   });
 }
 
@@ -160,7 +160,7 @@ router.delete('/:id', requireAuthentication, async (req, res, next) => {
       if (existingPhoto) {
         try{
               //Try to validate user email
-            const authorizedSearch = await validateUserIdEmail(req.user, parseInt(req.params.id) );
+            const authorizedSearch = await validateCustomerIdEmail(req.customer, parseInt(req.params.id) );
             if(!authorizedSearch){
               res.status(403).send({
                 error: "Unauthorized to access the specific resource"
@@ -185,7 +185,7 @@ router.delete('/:id', requireAuthentication, async (req, res, next) => {
 } catch (err) {
   console.error(err);
   res.status(500).send({
-    error: "Unable to validate user id.  Please try again later."
+    error: "Unable to validate customer id.  Please try again later."
   });
 }
 

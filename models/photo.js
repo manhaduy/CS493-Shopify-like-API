@@ -9,7 +9,7 @@ const { extractValidFields } = require('../lib/validation');
  * Schema describing required/optional fields of a photo object.
  */
 const PhotoSchema = {
-  userid: { required: true },
+  customerid: { required: true },
   businessid: { required: true },
   caption: { required: false }
 };
@@ -96,11 +96,11 @@ exports.getPhotosByBusinessId = getPhotosByBusinessId;
  * does not have any photos.  This function does not verify that the specified
  * user ID corresponds to a valid user.
  */
-async function getPhotosByUserId(id) {
+async function getPhotosByCustomerId(id) {
   const [ results ] = await mysqlPool.query(
-    'SELECT * FROM photos WHERE userid = ?',
+    'SELECT * FROM photos WHERE customerid = ?',
     [ id ]
   );
   return results;
 }
-exports.getPhotosByUserId = getPhotosByUserId;
+exports.getPhotosByCustomerId = getPhotosByCustomerId;

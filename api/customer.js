@@ -1,28 +1,28 @@
 const router = require('express').Router();
 
 const { getBusinessesByOwnerId } = require('../models/business');
-const { getReviewsByUserId } = require('../models/review');
-const { getPhotosByUserId } = require('../models/photo');
+const { getReviewsByCustomerId } = require('../models/review');
+const { getPhotosByCustomerId } = require('../models/photo');
 
 const { validateAgainstSchema } = require('../lib/validation');
 const {
-  UserSchema,
-  insertNewUser,
-  getUserById,
-  validateUserEmail,
-  validateUserIdEmail,
-  validateUser
-} = require('../models/user');
+  CustomerSchema,
+  insertNewCustomer,
+  getCustomerById,
+  validateCustomerEmail,
+  validateCustomerIdEmail,
+  validateCustomer
+} = require('../models/customer');
 
 const { generateAuthToken, requireAuthentication } = require('../lib/auth');
 /*
- * Route to list all of a user's businesses.
+ * Route to list all of a customer's businesses.
  */
 router.get('/:id/businesses', async (req, res, next) => {
 
 //Try to validate
 try {
-  const authorizedSearch = await validateUserIdEmail(req.user, parseInt(req.params.id) );
+  const authorizedSearch = await validateCustomerIdEmail(req.customer, parseInt(req.params.id) );
   if(!authorizedSearch){
     res.status(403).send({
       error: "Unauthorized to access the specific resource"
@@ -56,12 +56,12 @@ try {
 });
 
 /*
- * Route to list all of a user's reviews.
+ * Route to list all of a customer's reviews.
  */
 router.get('/:id/reviews', async (req, res, next) => {
   //Try to validate
   try {
-    const authorizedSearch = await validateUserIdEmail(req.user, parseInt(req.params.id) );
+    const authorizedSearch = await validateCustomerIdEmail(req.customer, parseInt(req.params.id) );
     if(!authorizedSearch){
       res.status(403).send({
         error: "Unauthorized to access the specific resource"
@@ -70,7 +70,7 @@ router.get('/:id/reviews', async (req, res, next) => {
 
 
   try {
-    const reviews = await getReviewsByUserId(parseInt(req.params.id));
+    const reviews = await getReviewsByCustomerId(parseInt(req.params.id));
     if (reviews) {
       res.status(200).send({ reviews: reviews });
     } else {
@@ -94,12 +94,12 @@ router.get('/:id/reviews', async (req, res, next) => {
 });
 
 /*
- * Route to list all of a user's photos.
+ * Route to list all of a Customer's photos.
  */
 router.get('/:id/photos', async (req, res, next) => {
   //Try to validate
   try {
-    const authorizedSearch = await validateUserIdEmail(req.user, parseInt(req.params.id) );
+    const authorizedSearch = await validateCustomerIdEmail(req.customer, parseInt(req.params.id) );
     if(!authorizedSearch){
       res.status(403).send({
         error: "Unauthorized to access the specific resource"
@@ -107,7 +107,7 @@ router.get('/:id/photos', async (req, res, next) => {
     } else {
 
   try {
-    const photos = await getPhotosByUserId(parseInt(req.params.id));
+    const photos = await getPhotosByCustomerId(parseInt(req.params.id));
     if (photos) {
       res.status(200).send({ photos: photos });
     } else {
@@ -130,25 +130,25 @@ router.get('/:id/photos', async (req, res, next) => {
 });
 
 /*
- * Route to add a new user.
+ * Route to add a new Customer.
  */
 
 router.post('/',  async (req, res, next) =>{
-  if (validateAgainstSchema(req.body, UserSchema)) {
+  if (validateAgainstSchema(req.body, CustomerSchema)) {
 
     try {
-      const id = await insertNewUser(req.body);
+      const id = await insertNewCustomer(req.body);
       res.status(201).send({
         id: id,
         links: {
-          user: `/users/${id}`,
+          customer: `/customers/${id}`,
 
         }
       });
     } catch (err) {
       console.error(err);
       res.status(500).send({
-        error: "Error inserting user into DB.  Please try again later."
+        error: "Error inserting customer into DB.  Please try again later."
       });
     }
   } else {
@@ -159,21 +159,21 @@ router.post('/',  async (req, res, next) =>{
 });
 
 /*
- * Route to get a user by ID.
+ * Route to get a customer by ID.
  */
 router.get('/:id', requireAuthentication, async (req, res, next) => {
 
   try {
-    const emailIdMatch = await validateUserIdEmail(req.user, parseInt(req.params.id) );
+    const emailIdMatch = await validateCustomerIdEmail(req.customer, parseInt(req.params.id) );
     if(!emailIdMatch){
       res.status(403).send({
         error: "Unauthorized to access the specific resource"
       })
     } else {
       try {
-        const user = await getUserById(parseInt(req.params.id), 0);
-        if (user) {
-          res.status(200).send(user);
+        const customer = await getCustomerById(parseInt(req.params.id), 0);
+        if (customer) {
+          res.status(200).send(customer);
         } else {
           next();
         }
@@ -186,7 +186,7 @@ router.get('/:id', requireAuthentication, async (req, res, next) => {
     }
   } catch (err){
     res.status(500).send({
-      error: "Unable to validate user id for logged in customers. Try again later."
+      error: "Unable to validate customer id for logged in customers. Try again later."
     });
   }
 
@@ -196,13 +196,13 @@ router.get('/:id', requireAuthentication, async (req, res, next) => {
 
 
 /*
- * Route to allow JWT-based user logins
+ * Route to allow JWT-based customer logins
  */
 
 router.post('/login', async (req, res) => {
   if (req.body && req.body.email && req.body.password) {
     try {
-      const emailPassMatch = await validateUserEmail(
+      const emailPassMatch = await validateCustomerEmail(
         req.body.email,
         req.body.password
       );
@@ -214,7 +214,7 @@ router.post('/login', async (req, res) => {
           });
         } catch (err){
           res.status(500).send({
-            error: "Could not perform user validation."
+            error: "Could not perform customer validation."
           });
         }
       } else {
@@ -231,7 +231,7 @@ router.post('/login', async (req, res) => {
     }
   } else {
     res.status(400).json({
-      error: "Request body needs user ID and password."
+      error: "Request body needs customer ID and password."
     });
   }
 
