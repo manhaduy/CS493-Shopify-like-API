@@ -206,9 +206,9 @@ DROP TABLE IF EXISTS `products`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `products` (
-  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `id` mediumint(5) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `category` text,
+  `category` varchar(255) NOT NULL,
   `description` text,
   `price` float NOT NULL,
   `customerid` mediumint(9) NOT NULL,
