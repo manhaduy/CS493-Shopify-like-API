@@ -16,7 +16,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `users`
+-- Table structure for table `customers`
 --
 
 DROP TABLE IF EXISTS `customers`;
@@ -38,7 +38,7 @@ CREATE TABLE `customers` (
 --
 
 LOCK TABLES `customers` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
 INSERT INTO `customers` VALUES
   (0,'Admin','admin@businesses.com','$2a$08$Y00/JO/uN9n0dHKuudRX2eKksWMIHXDLzHWKuz/K67alAYsZRRike',1),
   (1,'Nick Arzner','nick@block15.com','$2a$08$Y2IHnr/PU9tzG5HKrHGJH.zH3HAvlR5i5puD5GZ1sHA/mVrHKci72',0),
@@ -197,6 +197,48 @@ INSERT INTO `reviews` VALUES
   (10,2,4.5,NULL,5,18);
 /*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `products`
+--
+
+DROP TABLE IF EXISTS `products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `products` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `category` text,
+  `description` text,
+  `price` float NOT NULL,
+  `customerid` mediumint(9) NOT NULL,
+  `businessid` mediumint(9) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_customerid` (`customerid`),
+  KEY `idx_businessid` (`businessid`),
+  CONSTRAINT `products_ibfk_1` FOREIGN KEY (`customerid`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `products_ibfk_2` FOREIGN KEY (`businessid`) REFERENCES `businesses` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `photos`
+--
+
+LOCK TABLES `products` WRITE;
+/*!40000 ALTER TABLE `photos` DISABLE KEYS */;
+INSERT INTO `products` VALUES
+  (1,'Lego','toy','Legoset.  It\'s the best!',10,8,5),
+  (2,'Dish','utensils','Try the hazlenut torte.  It\'s the best!',13,2,3),
+  (3,'Fork','utensils','silver made!',6,16),
+  (4,'Sticky Hands','toy','Slummy dummy description',14,11,7),
+  (5,'Spoon','utensils','for the soup!',15,5,6),
+  (6,'Popcorn!','food','pop pop pop!',16,7,2);
+/*!40000 ALTER TABLE `photos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
