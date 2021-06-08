@@ -222,11 +222,11 @@ CREATE TABLE `products` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `photos`
+-- Dumping data for table `products`
 --
 
 LOCK TABLES `products` WRITE;
-/*!40000 ALTER TABLE `photos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `products` DISABLE KEYS */;
 INSERT INTO `products` VALUES
   (1,'Lego','toy','Legoset.  It\'s the best!',10,8,5),
   (2,'Dish','utensils','Try the hazlenut torte.  It\'s the best!',13,2,3),
@@ -234,7 +234,7 @@ INSERT INTO `products` VALUES
   (4,'Sticky Hands','toy','Slummy dummy description',14,11,7),
   (5,'Spoon','utensils','for the soup!',15,5,6),
   (6,'Popcorn!','food','pop pop pop!',16,7,2);
-/*!40000 ALTER TABLE `photos` ENABLE KEYS */;
+/*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
 

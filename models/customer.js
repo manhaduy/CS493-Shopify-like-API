@@ -19,7 +19,7 @@ const CustomerSchema = {
   exports.CustomerSchema = CustomerSchema;
 
 
-async function insertNeCustomer(customer) {
+async function insertNewCustomer(customer) {
     customer = extractValidFields(customer, CustomerSchema);
 
     const passwordHash = await bcrypt.hash(customer.password, 8);
